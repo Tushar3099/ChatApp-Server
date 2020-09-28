@@ -4,9 +4,9 @@ import isAuthenticated from "../../middlewares/isAuthenticated";
 
 export default express
   .Router()
-  .get("/", controller.searchUser)
+  .get("/", isAuthenticated, controller.searchUser)
+  .get("/friend", isAuthenticated, controller.searchFriends)
   .get("/:id", controller.getUser)
   .post("/:id", controller.addDetails)
   .delete("/:id")
-  .put("/:id")
-  .get("/friends", isAuthenticated, controller.searchFriends);
+  .put("/:id");

@@ -33,7 +33,7 @@ export class Controller {
   }
   async addDetails(req, res) {
     try {
-      const done = await UserService.addDetails(req.params.id, req.query);
+      const done = await UserService.addDetails(req.params.id, req.body);
       if (done)
         res.send({
           status: "500",
@@ -54,7 +54,7 @@ export class Controller {
       );
       res.send({
         status: "500",
-        friends,
+        friends: friends.friends,
         message: "Friends fetched Successfully",
       });
     } catch (error) {

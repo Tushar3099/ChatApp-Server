@@ -42,6 +42,7 @@ export class AuthService {
         password: hashedPassword,
         phoneNumber,
       });
+      console.log(user);
 
       const token = jwt.sign(
         { id: newUser._id, username: newUser.username },

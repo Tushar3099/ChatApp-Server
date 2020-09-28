@@ -1,6 +1,7 @@
 import UserModel from "../../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import user from "../../models/user";
 
 export class UserService {
   async searchUser(search) {
@@ -16,7 +17,12 @@ export class UserService {
   }
   async getUser(userId) {
     try {
-      const user = UserModel.findOne({ _id: userId }).select("-password -__v");
+      const user = await UserModel.findOne({ _id: userId })
+        .select("-password -__v")
+        .populate({
+          path: "friends",
+          select: "name username phoneNumber -_id",
+        });
       return user;
     } catch (error) {
       throw error;
@@ -24,18 +30,20 @@ export class UserService {
   }
   async searchFriends(userId, search) {
     try {
-      const friends = UserModel.find({ _id: userId })
+      if (!search) throw { message: "Search field Empty" };
+      const friends = UserModel.findOne({ _id: userId })
         .populate({
           path: "friends",
-          match: {},
+          match: { username: { $regex: `${search}`, $options: "i" } },
+          select: "name username phoneNumber",
         })
         .select("friends");
-      return user;
+      return friends;
     } catch (error) {
       throw error;
     }
   }
-  async addDetails(userId, query) {
+  async addDetails(userId, body) {
     try {
       const {
         username,
@@ -46,7 +54,7 @@ export class UserService {
         phoneNumber,
         password,
         friend,
-      } = query;
+      } = body;
       if (username) {
         const user = await UserModel.findOne({ username });
         if (user) throw { message: "Username already used" };
@@ -70,7 +78,7 @@ export class UserService {
         );
       }
 
-      return UserModel.findOneAndUpdate({ _id: userId }, query);
+      return UserModel.findOneAndUpdate({ _id: userId }, body);
     } catch (error) {
       throw error;
     }

@@ -15,7 +15,6 @@ consumes:
 produces:
   - application/json
 
-
 definitions:
   ExampleBody:
     type: object
@@ -45,7 +44,7 @@ paths:
           in: body
           description: an example
           required: true
-          schema: 
+          schema:
             $ref: "#/definitions/ExampleBody"
       responses:
         200:
