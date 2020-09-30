@@ -1,7 +1,6 @@
 import UserModel from "../../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import user from "../../models/user";
 
 export class UserService {
   async searchUser(search) {
