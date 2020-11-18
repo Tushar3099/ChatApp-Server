@@ -2,11 +2,26 @@ import ChatModel from "../../models/chat";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import MessageModel from "../../models/message";
+import axios from "axios";
 
 export class ChatService {
   async showChats(userId, search) {
     try {
-      const chats = await ChatModel.find({ users: userId }).populate("userss");
+      const chats = await ChatModel.find({ users: userId })
+        .populate({
+          path: "users",
+          select: "_id name image",
+        })
+        .populate({
+          path: "messages",
+          options: {
+            sort: { createdAt: -1 },
+            limit: 1,
+          },
+        })
+        .sort({
+          createdAt: -1,
+        });
       return chats;
     } catch (error) {
       throw error;
@@ -31,6 +46,7 @@ export class ChatService {
       throw error;
     }
   }
+
   async addChat(id, userId, isChat, messageData) {
     try {
       if (isChat) {

@@ -6,13 +6,13 @@ import * as os from "os";
 import cookieParser from "cookie-parser";
 import "./mongo";
 import oas from "./swagger";
-
+import socketIo from "socket.io";
 import l from "./logger";
 
 const app = new Express();
 const exit = process.exit;
 
-export default class ExpressServer {
+export class ExpressServer {
   constructor() {
     const root = path.normalize(`${__dirname}/../..`);
     app.set("appPath", `${root}client`);
